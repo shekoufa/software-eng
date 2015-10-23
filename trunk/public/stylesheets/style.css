@@ -1,0 +1,81 @@
+html, body {
+    height: 100%;
+}
+.fill {
+    min-height: 100vh !important;
+    margin-bottom: -25px;
+    margin-top: -50px;
+}
+body{
+    padding-top: 50px ;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+#banner-container {
+    background: #c1f2ff none repeat scroll 0 0;
+    border: 2px solid #9dd2d8;
+    width: 100%;
+    margin: 5px 0px;
+}
+
+#banner {
+    min-height: 80px;
+    line-height: 75px;
+    text-align: center;
+    font-size: 24pt;
+    font-weight: bold;
+    color: #254F6D;
+}
+
+#banner > img {
+    padding: 5px;
+}
+
+#banner-desc {
+    text-align: right;
+    margin-right: 5px;
+    margin-top: -20px;
+    color:#254F6D;
+
+}
+
+footer {
+    background: #c1f2ff none repeat scroll 0 0;
+    border: 2px solid #9dd2d8;
+    z-index: 5;
+    height: 25px;
+    max-height: 25px;
+    /*position: absolute !important;*/
+    bottom: 0;
+}
+footer > p {
+    margin: 0;
+}
+main{
+    padding: 0 !important;
+}
+.content{
+    text-indent: 50px;
+    text-align: justify;
+    background: url("../images/help.png") no-repeat left top;
+    padding-top: 180px;
+}
+
+.navbar {
+    margin-bottom: 5px !important;
+}
+.navbar-inverse{
+    background-color: #254f6d !important;
+}
+.navbar-nav > li > a{
+    color: #E1E1E1 !important;
+}
+
+#login-image{
+    border: 1px solid white;
+    border-radius: 5px;
+}

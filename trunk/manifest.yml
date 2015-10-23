@@ -1,0 +1,16 @@
+---
+applications:
+- name: NodeJS_Simple_3
+  framework: node
+  runtime: node08
+  memory: 256M
+  instances: 1
+  host: NodeJS_Simple_3-${random-word}
+  path: .     
+  command: node app.js 
+  services:
+    redis-5a659:
+      label: redis
+      provider: core
+      version: '2.6'
+      plan: 100 
