@@ -1,0 +1,61 @@
+<!-- views/login.ejs -->
+<head>
+    <% include ../partials/head %>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        /*body 		{ padding-top:80px; }*/
+    </style>
+</head>
+<body>
+<div class="container fill col-lg-10 col-lg-offset-1">
+    <header style="margin-top: 50px;">
+        <% include ../partials/mentorheader %>
+    </header>
+    <div class="col-sm-6">
+        <div class="page-header text-center">
+            <h1><span class="fa fa-anchor"></span> Welcome <%= user.local.name %> </h1>
+        </div>
+        <div> Below are the list of pending mentors:</div>
+        <table id="pendingTable">
+            <% for(var i=0; i < pendingMentors.length; i++) { %>
+            <tr>
+                <td><%= pendingMentors[i].local.name %></td>
+                <td><input type="button" value="accept" onclick="acceptMentor('<%=pendingMentors[i].id%>');"/> </td>
+            </tr>
+            <% } %>
+        </table>
+    </div>
+</div>
+<footer class="col-lg-12 col-sm-12 col-xs-12">
+    <% include ../partials/footer %>
+</footer>
+<script type="text/javascript">
+    function acceptMentor(userId){
+        $.ajax({
+            url : '/profile',
+            data: {userId:userId},
+            type : 'GET',
+            success : function(data){
+                ///I want this html comes after ejs compilation process
+//                $("#main").html(html);
+                var str = "";
+                for(var i=0; i < data.length; i++) {
+                    str += "<tr>"
+                        +"<td>"+data[i].local.name+"</td>"
+                        +"<td><input type='button' value='accept' onclick=acceptMentor('"+data[i].id+"')/></td>"
+                        +"</tr>";
+                }
+                if(str.length==0){
+                    $("#pendingTable").html("<tr><td>No more pending mentors.</td></tr>");
+                }else{
+                    $("#pendingTable").html(str);
+                }
+            },
+            error : function(err){
+                if(err)throw err;
+            }
+        });
+    }
+</script>
+</body>

@@ -9,17 +9,22 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var morgan = require('morgan');
-var redis = require('redis');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var flash    = require('connect-flash');
+
+var configDB = require('./config/database.js');
+
+// configuration ===============================================================
+mongoose.connect(configDB.url); // connect to our database
+
+require('./config/passport')(passport); // pass passport for configuration
 
 /**
 *** Initial setup
 **/
 if (process.env.VCAP_SERVICES) {
   var env = JSON.parse(process.env.VCAP_SERVICES);
-  var credentials = env['redis-2.6'][0]['credentials'];
-} else {
-  var credentials = {"host":"127.0.0.1", "port":5556, "username":"user1",
-    "password":"secret"}
 }
 
 var port = (process.env.VCAP_APP_PORT || 3000);
@@ -29,56 +34,34 @@ var host = (process.env.VCAP_APP_HOST || '0.0.0.0');
  * Setup the Express engine
 **/
 var app = express();
-app.set('port', port);
-app.set('view engine', 'ejs');
 
-app.use(morgan('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.configure(function() {
+    app.set('port', port);
+    app.set('view engine', 'ejs');
 
-/**
- * Connect to the Redis database
-**/
-var client = redis.createClient(credentials.port, credentials.host);
-if (credentials.password != '') {
-    client.auth(credentials.password);
-}
-client.on("error", function (err) {
-        console.log("Error " + err);
+    app.use(morgan('dev'));
+    app.use(express.static(path.join(__dirname, 'public')));
+    // set up our express application
+    app.use(express.logger('dev')); // log every request to the console
+    app.use(express.cookieParser()); // read cookies (needed for auth)
+    app.use(express.bodyParser()); // get information from html forms
+
+    app.set('view engine', 'ejs'); // set up ejs for templating
+
+    // required for passport
+    app.use(express.session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+    app.use(passport.initialize());
+    app.use(passport.session()); // persistent login sessions
+    app.use(flash()); // use connect-flash for flash messages stored in session
+
 });
+require('./app/routes.js')(app, passport, mongoose);
 
 /**
  * This is our home route.  This gets called when we visit our
  * base address http://MYSERVERNAME.mybluemix.net/
 **/
-var userCount = 0;
-app.get('/', function(req, res) {
-    userCount = userCount + 1;
-    // Increment the value in the database and render the results
-    client.incrby("DBuserCountBy1", 1, function (err, replyBy1) { /*copy this line for DBuserCountby2 add {} */
-        res.render('index', {userCount: userCount, DBuserCountBy1: replyBy1}); /* add DBuserCountBy2 */
-        });
-    });
-app.get('/about', function(req,res){
-	res.render('pages/about');
-});
-app.get('/contact', function(req,res){
-    res.render('pages/contactus');
-});
-app.post('/sendcontact', function(req,res){
-    res.render('pages/underconstruction');
-});
-app.get('/login', function(req,res){
-    res.render('pages/login');
-});
-app.get('/dologin', function(req,res){
-    res.render('pages/underconstruction');
-});
-app.get('/registermentor', function(req,res){
-    res.render('pages/underconstruction');
-});
-app.get('/events', function(req,res){
-    res.render('pages/underconstruction');
-});
+
 
 
 /**

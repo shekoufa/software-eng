@@ -74,8 +74,16 @@ main{
 .navbar-nav > li > a{
     color: #E1E1E1 !important;
 }
+.sidebar-brand > label{
+    color: #E1E1E1 !important;
+    text-indent: 0px !important;
+}
 
 #login-image{
+    border: 1px solid white;
+    border-radius: 5px;
+}
+#logout-image{
     border: 1px solid white;
     border-radius: 5px;
 }
