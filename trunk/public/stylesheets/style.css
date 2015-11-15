@@ -74,8 +74,16 @@ main{
 .navbar-nav > li > a{
     color: #E1E1E1 !important;
 }
+.sidebar-brand > label{
+    color: #E1E1E1 !important;
+    text-indent: 0px !important;
+}
 
 #login-image{
+    border: 1px solid white;
+    border-radius: 5px;
+}
+#logout-image{
     border: 1px solid white;
     border-radius: 5px;
 }
@@ -84,4 +92,13 @@ main{
     min-height: 300px;
     width: 100%;
     height: 100%;
+}
+#header-profile-pic{
+    display: inline-block;
+    float: left;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+#header-profile-pic > img{
+    border-radius: 5px;
 }
