@@ -2,7 +2,8 @@
 module.exports = function(app, passport, mongoose) {
     var User = require('./models/user');
     var ahoy = require('../config/ahoy');
-	// =====================================
+    var fs = require('fs');
+    // =====================================
 	// HOME PAGE (with login links) ========
 	// =====================================
 	app.get('/', function(req, res) {
@@ -37,6 +38,7 @@ module.exports = function(app, passport, mongoose) {
 		// render the page and pass in any flash data if it exists
         var signupFinish = req.flash('signupFinish');
         var signupMessage = req.flash('signupMessage');
+        var sessionUser = req.flash('newUser');
         if(signupMessage.length>0){
 		    res.render('pages/signup.ejs', { user: req.user, message: signupMessage,finalMessage:signupFinish});
         }else if(signupFinish.length>0){
@@ -49,7 +51,7 @@ module.exports = function(app, passport, mongoose) {
 
 	// process the signup form
 	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : '/login', // redirect to the secure profile section
+		successRedirect : '/profile', // redirect to the secure profile section
 		failureRedirect : '/signup', // redirect back to the signup page if there is an error
 		failureFlash : true // allow flash messages
 	}));
@@ -136,9 +138,11 @@ module.exports = function(app, passport, mongoose) {
             // change the users location
 //                user.local.status = 'pending';
             // save the user
+            var pathToDelete = "public/repository/profiles/"+user.local.email;
             user.remove(function(err) {
                 if (err) throw err;
                 console.log('User successfully destroyed!');
+                deleteFolderRecursive(pathToDelete);
                 ahoy.sendSMS(user.local.phoneNo,"Hello "+user.local.name+"! Your request for registration was denied. With love, from G-Help.");
                 User.find().where('local.role').equals('mentor').where('local.status').equals('pending').exec(function(err, users) {
                     if (err) throw err;
@@ -256,8 +260,22 @@ module.exports = function(app, passport, mongoose) {
             user: req.user
         });
 	});
+    var deleteFolderRecursive = function(path) {
+        if( fs.existsSync(path) ) {
+            fs.readdirSync(path).forEach(function(file,index){
+                var curPath = path + "/" + file;
+                if(fs.lstatSync(curPath).isDirectory()) { // recurse
+                    deleteFolderRecursive(curPath);
+                } else { // delete file
+                    fs.unlinkSync(curPath);
+                }
+            });
+            fs.rmdirSync(path);
+        }
+    };
 
 };
+
 // route middleware to make sure
 function isLoggedIn(req, res, next) {
 
