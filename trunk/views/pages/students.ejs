@@ -1,0 +1,53 @@
+<!-- views/login.ejs -->
+<head>
+    <% include ../partials/head %>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        /*body 		{ padding-top:80px; }*/
+    </style>
+</head>
+<body>
+<div class="container fill col-lg-10 col-lg-offset-1">
+    <header style="margin-top: 50px;">
+        <% include ../partials/mentorheader %>
+    </header>
+    <div class="col-sm-12">
+        <div class="container">
+            <% if (students.length==0){%>
+            <div>G-Help hasn't assigned you any students yet, come back to check later.</div>
+            <%}else{%>
+            <h2>Below are the list of the students assigned to you:</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>MUN ID</th>
+                    <th>Program Of Study</th>
+                    <th>Photo</th>
+                </tr>
+                </thead>
+                <tbody id="pendingTable">
+                <% for(var i=0; i < students.length; i++) { %>
+                <tr>
+                    <td><%= students[i].local.name %></td>
+                    <td><%= students[i].local.email %></td>
+                    <td><%= students[i].local.phoneNo %></td>
+                    <td><%= students[i].local.studentId %></td>
+                    <td><%= students[i].local.programOfStudy %></td>
+                    <td><img height="64" src=<%=students[i].local.img%>> </td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+            <%}%>
+
+        </div>
+    </div>
+</div>
+<footer class="col-lg-12 col-sm-12 col-xs-12">
+    <% include ../partials/footer %>
+</footer>
+</body>

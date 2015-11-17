@@ -2,6 +2,9 @@
 <div class="col-lg-12">
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
+            <% if(user!=null){%>
+            <div id="header-profile-pic"><img height="48" src=<%=user.local.img%>></div>
+            <%}%>
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                         data-target="#bs-example-navbar-collapse-1">
@@ -16,20 +19,31 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="/">Home <span class="sr-only">(current)</span></a></li>
+                    <% if(user!=null&&user.local.role!='admin'){%>
+                    <li><a href="/profile">Profile</a></li>
+                    <%}else if(user!=null){%>
+                    <li><a href="/profile">Dashboard</a></li>
+                    <%}%>
                     <li><a href="/about">About</a></li>
                     <li><a href="/contact">Contact Us</a></li>
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Services
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="/registermentor">Register as Mentor</a></li>
+                            <% if(user==null){%>
+                            <li><a href="/signup">Register as Mentor</a></li>
                             <li class="divider"></li>
+                            <%}%>
                             <li><a href="/events">Events</a></li>
                         </ul>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <% if(user!=null){%>
+                    <li><a href="/logout"><img id="logout-image" src="../images/logout.png" height="25px"/></a></li>
+                    <%}else{%>
                     <li><a href="/login"><img id="login-image" src="../images/login.png" height="25px"/></a></li>
+                    <%}%>
                 </ul>
             </div>
         </div>

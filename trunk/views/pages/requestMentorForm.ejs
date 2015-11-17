@@ -1,0 +1,38 @@
+<!-- views/login.ejs -->
+<head>
+    <% include ../partials/head %>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        /*body 		{ padding-top:80px; }*/
+    </style>
+</head>
+<body>
+<div class="container fill col-lg-10 col-lg-offset-1">
+    <header style="margin-top: 50px;">
+        <% include ../partials/studentheader %>
+    </header>
+    <div class="col-sm-12">
+        <div>
+            Ok <%=user.local.name%>, it's now time to set some criteria for a prospective mentor that can help you along.
+        </div>
+        <form action="/submitMentorReq" method="post">
+            <div class="form-group">
+                <label class="col-xs-4">Do you prefer your mentor to have a car?</label>
+                <div class="col-xs-8">
+                    <select class="form-control" name="hasCar">
+                        <option value="yes">Yes</option>
+                        <option value="no">Not important</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success btn-lg">Place your request...</button>
+        </form>
+    </div>
+</div>
+<footer class="col-lg-12 col-sm-12 col-xs-12">
+    <% include ../partials/footer %>
+</footer>
+<script type="text/javascript">
+</script>
+</body>

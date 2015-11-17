@@ -1,0 +1,37 @@
+<!-- views/login.ejs -->
+<head>
+    <% include ../partials/head %>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        /*body 		{ padding-top:80px; }*/
+    </style>
+</head>
+<body>
+<div class="container fill col-lg-10 col-lg-offset-1">
+    <header style="margin-top: 50px;">
+        <% include ../partials/mentorheader %>
+    </header>
+    <div class="col-12">
+        <div class="page-header text-center">
+            <h1  style="font-size: 24px !important;"><span class="fa fa-anchor"></span> Welcome <%=user.local.name%></h1>
+        </div>
+        <div>
+            <%if (user.local.studentsCount == 0){%>
+                <div>
+                    You Still have no students to mentor, wait until we assign you a new student...
+                </div>
+            <%}else if (user.local.studentsCount == 1){%>
+            <div>
+                You have one student to mentor, click <a href="/students">here</a> to go to your students page...
+            </div>
+            <%}else{%>
+                You have <%=user.local.studentsCount%> students to mentor, click <a href="/students">here</a> to go to your students page...
+            <%}%>
+        </div>
+    </div>
+</div>
+<footer class="col-lg-12 col-sm-12 col-xs-12">
+    <% include ../partials/footer %>
+</footer>
+</body>

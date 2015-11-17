@@ -1,0 +1,92 @@
+<head>
+	<% include ../partials/head %>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+	<style>
+        input:required:invalid, input:focus:invalid {
+            background-image: url(images/invalid.png);
+            background-position: right top;
+            background-repeat: no-repeat;
+        }
+        input:required:valid {
+            background-image: url(images/valid.png);
+            background-position: right top;
+            background-repeat: no-repeat;
+        }
+	</style>
+</head>
+<body>
+<div class="container fill col-lg-10 col-lg-offset-1">
+	<header style="margin-top: 50px;">
+		<% include ../partials/header %>
+	</header>
+
+	<div class="col-sm-6 col-sm-offset-3">
+
+	<h1><span class="fa fa-sign-in"></span> Signup</h1>
+
+	<!-- show any messages that come back with authentication -->
+	<% if (message.length > 0) { %>
+		<div class="alert alert-danger"><%= message %></div>
+	<% } %>
+
+	<!-- LOGIN FORM -->
+	<form action="/signup" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" pattern=".{4,}" class="form-control" name="fullName" required autofocus title="Enter at least 4 characters">
+        </div>
+		<div class="form-group">
+			<label>Email</label>
+			<input type="text" pattern=".([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})" class="form-control" name="email" required title="Email Address (Format: someone@someplace.abc)">
+		</div>
+        <div class="form-group">
+            <label>MUN Student #</label>
+            <input type="text" pattern='\d{9}' class="form-control" name="studentNo" required title="Your student id must be exactly 9 digits.">
+        </div>
+        <div class="form-group">
+            <label>Program Of Study</label>
+            <select class="form-control" name="programOfStudy">
+                <option value="Computer Science">Computer Science</option>
+                <option value="Computer Engineering">Computer Engineering</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Address</label>
+            <input type="text" class="form-control" name="address" required pattern=".{8,}" title="Enter at least 8 characters">
+        </div>
+        <div class="form-group">
+            <label>Phone #</label>
+            <input type='tel' pattern='\d{10}' title='Phone Number (Format: 7093254625)' class=" col-sm-4  form-control" name="phoneNo" required>
+        </div>
+        <div class="form-group">
+            <label>Do you have a car?</label>
+            <select class="form-control" name="hasCarStr">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group">
+			<label>Password</label>
+			<input type="password" class="form-control" name="password" required pattern=".{6,}" title="Your password must be no less than 6 characters">
+		</div>
+        <div class="form-group">
+            <span class="btn btn-default btn-file">
+                <b>Your profile picture</b><input type="file" name="image" required />
+            </span>
+        </div>
+		<button type="submit" class="btn btn-warning btn-lg">Signup</button>
+	</form>
+
+	<hr>
+
+	<p>Already have an account? <a href="/login">Login</a></p>
+	<p>Or go <a href="/">home</a>.</p>
+
+	</div>
+
+</div>
+<footer class="col-lg-12 col-sm-12 col-xs-12">
+	<% include ../partials/footer %>
+</footer>
+</body>
