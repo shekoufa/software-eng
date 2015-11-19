@@ -47,6 +47,7 @@ module.exports = function(passport) {
 		// find a user whose email is the same as the forms email
 		// we are checking to see if the user trying to login already exists
         User.findOne({ 'local.email' :  email }, function(err, user) {
+            var role = req.param("role");
             var fullName = req.param("fullName");
             var studentId = req.param("studentNo");
             var programOfStudy = req.param("programOfStudy");
@@ -59,9 +60,27 @@ module.exports = function(passport) {
             }else{
                 hasCar = false;
             }
+            var newUser            = new User();
+
+            // set the user's local credentials
+            newUser.local.email    = email;
+            newUser.local.password = newUser.generateHash(password); // use the generateHash function in our user model
+            newUser.local.name = fullName;
+            newUser.local.studentId = studentId;
+            newUser.local.programOfStudy = programOfStudy;
+            newUser.local.address = address;
+            newUser.local.phoneNo = phoneNo;
+            newUser.local.hasCar = hasCar;
+            newUser.local.role = role;
+            newUser.local.img = '';
+            if(role == "student"){
+                newUser.local.status = 'active';
+            }else{
+                newUser.local.status = 'pending';
+            }
 
             if (user) {
-                return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                return done(null, false, req.flash('signupMessage', 'That email is already taken.'),req.flash('newUser',newUser));
             }else{
                 var tmp_path = req.files.image.path;
                 var target_path = 'public/repository/profiles/';
@@ -78,31 +97,22 @@ module.exports = function(passport) {
 
                         // check to see if theres already a user with that email
                         if (user) {
-                            return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                            return done(null, false, req.flash('signupMessage', 'That email is already taken.'),req.flash('newUser',newUser));
                         } else {
 
                             // if there is no user with that email
                             // create the user
-                            var newUser            = new User();
-
-                            // set the user's local credentials
-                            newUser.local.email    = email;
-                            newUser.local.password = newUser.generateHash(password); // use the generateHash function in our user model
-                            newUser.local.name = fullName;
-                            newUser.local.studentId = studentId;
-                            newUser.local.programOfStudy = programOfStudy;
-                            newUser.local.address = address;
-                            newUser.local.phoneNo = phoneNo;
-                            newUser.local.hasCar = hasCar;
-                            newUser.local.role = 'mentor';
-                            newUser.local.status = 'pending';
                             newUser.local.img = target_path.split("public")[1];
                             // save the user
                             newUser.save(function(err) {
                                 if (err)
                                     throw err;
-                                ahoy.sendSMS(phoneNo,"Welcome to G-Help, "+fullName+"! Your request for registration is pending. Thanks for being a part of G-Help <3");
-                                return done(null, false, req.flash('signupFinish', 'Yay! Registration complete. You can login after your request is accepted. '));
+                                if(role=="student"){
+                                    return done(null, newUser);
+                                }else{
+                                    ahoy.sendSMS(phoneNo,"Welcome to G-Help, "+fullName+"! Your request for registration is pending. Thanks for being a part of G-Help <3");
+                                    return done(null, false, req.flash('signupFinish', 'Yay! Registration complete. You can login after your request is accepted. '));
+                                }
                             });
                         }
                         fs.unlink(tmp_path, function() {

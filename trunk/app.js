@@ -16,7 +16,19 @@ var flash    = require('connect-flash');
 var configDB = require('./config/database.js');
 
 // configuration ===============================================================
-mongoose.connect(configDB.url); // connect to our database
+if(process && process.env && process.env.VCAP_SERVICES) {
+  var vcapServices = JSON.parse(process.env.VCAP_SERVICES);
+  for (var svcName in vcapServices) {
+    if (svcName.match(/^mongo.*/)) {
+      mongoUrl = vcapServices[svcName][0].credentials.uri;
+      mongoUrl = mongoUrl || vcapServices[svcName][0].credentials.url;
+	  console.log("This is mongoUrl: "+mongoUrl);
+      mongoose.connect(mongoUrl);
+    }
+  }
+} else {
+  mongoose.connect(configDB.url); // connect to our database
+}
 
 require('./config/passport')(passport); // pass passport for configuration
 
@@ -27,7 +39,7 @@ if (process.env.VCAP_SERVICES) {
   var env = JSON.parse(process.env.VCAP_SERVICES);
 }
 
-var port = (process.env.VCAP_APP_PORT || 3000);
+var port = (process.env.VCAP_APP_PORT || 80);
 var host = (process.env.VCAP_APP_HOST || '0.0.0.0');
 
 /**
@@ -69,7 +81,22 @@ require('./app/routes.js')(app, passport, mongoose);
  * was configuration for this server.
 **/
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+    var AdminUser = require('./app/models/user');
+    var newUser            = new AdminUser();
+// set the user's local credentials
+    newUser.local.email    = "afiech@mun.ca";
+    newUser.local.password = newUser.generateHash("mun.ca"); // use the generateHash function in our user model
+    newUser.local.name = "Adrian Fiech";
+    newUser.local.role = 'admin';
+    newUser.local.status = 'active';
+    newUser.local.img = '/repository/profiles/afiech@mun.ca/Adrian.jpg';
+// save the user
+    newUser.save(function(err) {
+        if (err){
+//            console.log("This is the initialization message: "+JSON.stringify(err));
+        }
+    });
+    console.log('Express server listening on port ' + app.get('port'));
 });
 
 
