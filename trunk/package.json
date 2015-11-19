@@ -17,11 +17,7 @@
     "passport-twitter" : "~1.0.2",
     "passport-google-oauth" : "~0.1.5",
     "connect-flash" : "~0.1.1",
-<<<<<<< HEAD
     "bcrypt-nodejs" : "latest",
     "twilio" : "latest"
-=======
-    "bcrypt-nodejs" : "latest"
->>>>>>> b6fa8162bbe9bc6aec10dc224bbb52f84f1aaf51
   }
 }
